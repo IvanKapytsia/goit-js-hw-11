@@ -1,5 +1,10 @@
 import fetchImages from './js/pickabay-api';
-import { hideLoader, renderImages, showLoader, showMessage } from './js/render-functions';
+import {
+  hideLoader,
+  renderImages,
+  showLoader,
+  showMessage,
+} from './js/render-functions';
 
 const form = document.querySelector('form');
 const input = document.querySelector('#search-text');
@@ -9,13 +14,13 @@ form.addEventListener('submit', handleSubmit);
 function handleSubmit(e) {
   e.preventDefault();
 
-  const searchText = input.value;
+  const searchText = input.value.trim();
 
   if (!searchText) return;
 
   input.value = '';
 
-  showLoader()
+  showLoader();
 
   fetchImages(searchText)
     .then(data => handleSearchResults(data.data.hits))
