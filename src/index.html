@@ -2,33 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="./img/github-icon-2.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Homework 11</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap"
-      rel="stylesheet"
-    />
+    <title>goit-js-hw-11</title>
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <main>
-      <search>
-        <form>
-          <input
-            type="text"
-            name="search-text"
-            id="search-text"
-            placeholder="Search images..."
-          />
-          <button type="submit">Search</button>
-        </form>
-      </search>
 
-      <p class="loader-box hidden"><span class="loader"></span></p>
-      <ul class="gallery"></ul>
+    <main>
+        <form action="submit" class="form js-form">
+          <input type="text" name="query" placeholder="Search images..">
+        
+          <button>Search</button>
+        </form>
+        
+        <div class="container">
+          <span class="loader"></span>
+          <ul class="gallery js-gallery"></ul>
+        </div>
     </main>
 
     <script type="module" src="./main.js"></script>

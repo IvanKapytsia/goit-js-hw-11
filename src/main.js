@@ -1,34 +1,72 @@
-import fetchImages from './js/pickabay-api';
-import {
-  hideLoader,
-  renderImages,
-  showLoader,
-  showMessage,
-} from './js/render-functions';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
 
-const form = document.querySelector('form');
-const input = document.querySelector('#search-text');
+import { getSearch } from "./js/pixabay-api";
+import { createMarkup } from "./js/render-functions";
 
-form.addEventListener('submit', handleSubmit);
+const form = document.querySelector('.js-form');
+const gallery = document.querySelector('.js-gallery');
+const loader = document.querySelector('.loader');
 
-function handleSubmit(e) {
-  e.preventDefault();
+let saveQuery = '';
+let refreshPage;
 
-  const searchText = input.value.trim();
+loader.style.display = 'none';
 
-  if (!searchText) return;
+form.addEventListener('submit', onSearch);
 
-  input.value = '';
+function onSearch(evt) {
+    evt.preventDefault()
+    gallery.innerHTML = '';
 
-  showLoader();
+    loader.style.display = 'block';
 
-  fetchImages(searchText)
-    .then(data => handleSearchResults(data.data.hits))
-    .catch(err => console.log(err));
-}
+    saveQuery = evt.target.elements.query.value.trim();
 
-function handleSearchResults(images) {
-  if (!images.length) showMessage();
+    if (saveQuery === '') {
+        return iziToast.info({
+            title: 'Hello',
+            message: 'Please enter search text!',
+        }),
+            loader.style.display = 'none',
+            form.reset()
+    }
 
-  renderImages(images);
+
+    getSearch(saveQuery)
+        .then(resp => {
+
+            gallery.insertAdjacentHTML("beforeend", createMarkup(resp.data.hits));
+
+            if (!resp.data.hits.length) {
+                iziToast.error({
+                    title: 'Error',
+                    message: 'Sorry, there are no images matching your search query. Please try again!',
+                }),
+                    loader.style.display = 'none';
+                return;
+            }
+
+            loader.style.display = 'none';
+
+            refreshPage = new SimpleLightbox('.gallery a', {
+                captions: true,
+                captionsData: 'alt',
+                captionDelay: 250,
+            });
+            refreshPage.refresh();
+        })
+        .catch(err => {
+
+            loader.style.display = 'none';
+
+            iziToast.error({
+                title: 'Error',
+                message: 'Something went wrong. Please try again later!',
+            });
+
+        });
+    form.reset();
 }
